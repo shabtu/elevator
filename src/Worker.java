@@ -54,6 +54,8 @@ public class Worker extends Thread{
                     Controller.output.println("m " + elevatorID + " 1");
 
                 position = destination;
+                System.out.println("asfopasf");
+
             }
             else
                 continue;
