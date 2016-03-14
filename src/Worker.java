@@ -10,7 +10,7 @@ import java.net.Socket;
 public class Worker extends Thread{
 
     int elevatorID;
-    int position = 0, destination = 0;
+    double position = 0, destination = 0, floor = 0;
     String input = "";
 
     Socket socket;
@@ -41,7 +41,7 @@ public class Worker extends Thread{
 
             if (input.charAt(0) == 'p'){
 
-                destination = (int) input.charAt(4) - 48;
+                destination = (double) input.charAt(4) - 48;
                 Controller.output.println("s " + elevatorID + " " + destination);
 
                 if (destination < position)
@@ -54,8 +54,16 @@ public class Worker extends Thread{
                     Controller.output.println("m " + elevatorID + " 1");
 
                 position = destination;
-                System.out.println("asfopasf");
 
+            }
+            if(input.charAt(0) == 'f'){
+                double decimal = ((double) input.charAt(6)-48)/10;
+                floor = (double)(input.charAt(4) - 48) + decimal;
+                System.out.println("Floor: " + floor);
+                System.out.println("Decimal: " + decimal);
+                if (floor == destination){
+                    Controller.output.println("m " + elevatorID + " 0");
+                }
             }
             else
                 continue;
