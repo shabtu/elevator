@@ -38,6 +38,10 @@ public class Controller {
                         continue;
                     }
                     System.out.println("Fick argument: " + inputArgument + "\nSkickar till: " + ((int) inputArgument.charAt(2) - 48));
+
+                    if (inputArgument.charAt(0) == 'v')
+                        continue;
+
                     workers[((int) inputArgument.charAt(2)-49)].setInput(inputArgument);
                 }
             }

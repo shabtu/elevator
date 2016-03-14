@@ -40,9 +40,10 @@ public class Worker extends Thread{
             System.out.println("Worker " + elevatorID + " got message: " + input);
 
             if (input.charAt(0) == 'p'){
+                Controller.output.println("d " + elevatorID + " -1");
 
                 destination = (double) input.charAt(4) - 48;
-                Controller.output.println("s " + elevatorID + " " + destination);
+                Controller.output.println("s " + elevatorID + " " + (int) destination);
 
                 if (destination < position)
                     Controller.output.println("m " + elevatorID + " -1");
@@ -55,21 +56,19 @@ public class Worker extends Thread{
 
                 position = destination;
 
+
             }
-            if(input.charAt(0) == 'f'){
-                double decimal = ((double) input.charAt(6)-48)/10;
-                floor = (double)(input.charAt(4) - 48) + decimal;
-                System.out.println("Floor: " + floor);
-                System.out.println("Decimal: " + decimal);
-                if (floor == destination){
+            if(input.charAt(0) == 'f') {
+                double decimal = ((double) input.charAt(6) - 48) / 10;
+                floor = (double) (input.charAt(4) - 48) + decimal;
+                if (floor == destination) {
                     Controller.output.println("m " + elevatorID + " 0");
+                    Controller.output.println("d " + elevatorID + " 1");
                 }
             }
-            else
-                continue;
 
-            Controller.output.println(input);
-            this.input = "";
+            //Controller.output.println(input);
+            //this.input = "";
         }
     }
 }
