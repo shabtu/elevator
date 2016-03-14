@@ -40,6 +40,12 @@ public class Worker extends Thread{
             System.out.println("Worker " + elevatorID + " got message: " + input);
 
             if (input.charAt(0) == 'p'){
+
+                if (input.equals("p " + elevatorID + " 32000")){
+                    Controller.output.println("m " + elevatorID + " 0");
+                    continue;
+                }
+
                 Controller.output.println("d " + elevatorID + " -1");
 
                 destination = (double) input.charAt(4) - 48;
@@ -60,8 +66,8 @@ public class Worker extends Thread{
             }
             if(input.charAt(0) == 'f') {
                 double decimal = ((double) input.charAt(6) - 48) / 10;
-                floor = (double) (input.charAt(4) - 48) + decimal;
-                if (floor == destination) {
+                position = (double) (input.charAt(4) - 48) + decimal;
+                if (position == destination) {
                     Controller.output.println("m " + elevatorID + " 0");
                     Controller.output.println("d " + elevatorID + " 1");
                 }
