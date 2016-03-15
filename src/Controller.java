@@ -14,6 +14,7 @@ public class Controller {
 
 
                 BufferedReader input;
+                String[] arguments;
 
 
                 socket = new Socket("localhost", 4711);
@@ -22,10 +23,10 @@ public class Controller {
 
 
                 /*Create workers to handle elevators*/
-                Worker[] workers = new Worker[2];
+                Worker[] workers = new Worker[3];
 
 
-                for (int i=0; i < 2 ; i++){
+                for (int i=0; i < workers.length ; i++){
                     workers[i] = new Worker(i+1);
                     workers[i].start();
                 }
@@ -37,12 +38,29 @@ public class Controller {
                     if ("".equals(input)) {
                         continue;
                     }
-                    System.out.println("Fick argument: " + inputArgument + "\nSkickar till: " + ((int) inputArgument.charAt(2) - 48));
+                    arguments = inputArgument.split(" ");
 
-                    if (inputArgument.charAt(0) == 'v')
+                    if (arguments[0].equals("v"))
                         continue;
-
-                    workers[((int) inputArgument.charAt(2)-49)].setInput(inputArgument);
+                    else if (arguments[0].equals("b")){
+                        for (int i=0; i < workers.length; i++){
+                            if (!workers[i].busy){
+                                workers[i].setInput(inputArgument);
+                                break;
+                            }
+                        }
+                    }
+                    else if (inputArgument.equals("p " + Integer.parseInt(arguments[1]) + " 32000")){
+                        Controller.output.println("m " + Integer.parseInt(arguments[1]) + " 0");
+                        System.out.println("Stopped worker " + Integer.parseInt(arguments[1]));
+                        workers[Integer.parseInt(arguments[1])-1].busy = false;
+                        continue;
+                    }
+                    else if (arguments[0].equals("f")){
+                        workers[Integer.parseInt(arguments[1])-1].setInput(inputArgument);
+                    }
+                    else if (!workers[Integer.parseInt(arguments[1])-1].busy)
+                        workers[Integer.parseInt(arguments[1])-1].setInput(inputArgument);
                 }
             }
         }
