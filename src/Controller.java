@@ -45,6 +45,12 @@ public class Controller {
                 continue;
             else if (arguments[0].equals("b")){
                 for (int i=0; i < workers.length; i++){
+
+                    if((workers[i].position -0.05) < Double.parseDouble(arguments[1]) && Double.parseDouble(arguments[1]) < (workers[i].position +0.05)){
+                        Controller.output.println("d " + workers[i].elevatorID + " 1");
+                        done = true;
+                        break;
+                    }
                     if (!workers[i].busy){
                         System.out.println(inputArgument);
                         workers[i].setInput(inputArgument);
@@ -54,6 +60,7 @@ public class Controller {
                 }
                 if (!done){
                     for (int i=0; i < workers.length; i++ ){
+
                         if(workers[i].up == (Integer.parseInt(arguments[2]) == 1)){
                             if(workers[i].up){
                                 if (workers[i].position < Double.parseDouble(arguments[1])){
@@ -74,7 +81,7 @@ public class Controller {
                 }
                 if (!done) {
                     int counter = 0;
-                    String x = "b " + fallSafeCounter + " " + arguments[1];
+                    String floorStop = "b " + fallSafeCounter + " " + arguments[1];
                     if (workers[fallSafeCounter].up) {
                         for (String n : workers[fallSafeCounter].listDown) {
                             if (Double.parseDouble(n.split(" ")[2]) > Double.parseDouble(arguments[1])) {
@@ -82,7 +89,7 @@ public class Controller {
                             }
                             counter++;
                         }
-                        workers[fallSafeCounter].listDown.add(counter, x);
+                        workers[fallSafeCounter].listDown.add(counter, floorStop);
                     }
                     else {
                         for (String n : workers[fallSafeCounter].listUp) {
@@ -91,7 +98,7 @@ public class Controller {
                             }
                             counter++;
                         }
-                        workers[fallSafeCounter].listUp.add(counter, x);
+                        workers[fallSafeCounter].listUp.add(counter, floorStop);
                     }
 
                     fallSafeCounter++;
@@ -109,6 +116,7 @@ public class Controller {
             else if (arguments[0].equals("f")){
                 workers[Integer.parseInt(arguments[1])-1].setInput(inputArgument);
             }
+
             else workers[Integer.parseInt(arguments[1])-1].setInput(inputArgument);
         }
     }

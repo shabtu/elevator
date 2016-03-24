@@ -13,13 +13,13 @@ import java.util.concurrent.Semaphore;
 public class Worker extends Thread{
 
     int elevatorID;
-    double position = 0, destination = -1, next, lastDestination = -1;
+    double position = 0, destination = -1;
     String[] arguments;
     String[] temp;
     String[] tempF;
     String input = "";
     boolean busy = false,stop = false, up = true;
-    //Semaphore lock = new Semaphore(1, true);
+
 
     LinkedList <String> listUp = new LinkedList<>();
     LinkedList <String> listDown = new LinkedList<>();
@@ -52,13 +52,13 @@ public class Worker extends Thread{
             double wantedDestination = Double.parseDouble(temp[1]);
 
             if (!busy) {
-                String a = "p " +  + elevatorID + " " + temp[1];
+                String floorStop = "p " +  + elevatorID + " " + temp[1];
                 if ((wantedDestination - position) > 0) {
-                    listUp.addFirst(a);
+                    listUp.addFirst(floorStop);
                     up = true;
                 }
                 else {
-                    listDown.addLast(a);
+                    listDown.addLast(floorStop);
                     up = false;
                 }
             }
@@ -67,17 +67,17 @@ public class Worker extends Thread{
                     counter = 0;
                     for(String n : listUp) {
                         if (Double.parseDouble(n.split(" ")[2]) > wantedDestination) {
-                            System.out.println("firsta " + next + " andra " + wantedDestination);
+
                             continue;
                         }
                         counter++;
                     }
-                    String a = "p " + elevatorID + " " + temp[1];
-                    listUp.add(counter, a);
+                    String floorStop = "p " + elevatorID + " " + temp[1];
+                    listUp.add(counter, floorStop);
                 }
                 else {
-                    String a = "p " +  + elevatorID + " " + destination;
-                    listUp.addFirst(a);
+                    String floorStop = "p " +  + elevatorID + " " + destination;
+                    listUp.addFirst(floorStop);
                     destination = wantedDestination;
                 }
             }
@@ -86,17 +86,17 @@ public class Worker extends Thread{
                     counter = 0;
                     for(String n : listDown) {
                         if (Double.parseDouble(n.split(" ")[2]) > wantedDestination) {
-                            System.out.println("firsta " + next + " andra " + wantedDestination);
+
                             continue;
                         }
                         counter++;
                     }
-                    String a = "p " + elevatorID + " " + temp[1];
-                    listDown.add(counter, a);
+                    String floorStop = "p " + elevatorID + " " + temp[1];
+                    listDown.add(counter, floorStop);
                 }
                 else {
-                    String a = "p " +  + elevatorID + " " + destination;
-                    listUp.addLast(a);
+                    String floorStop = "p " +  + elevatorID + " " + destination;
+                    listUp.addLast(floorStop);
                     destination = wantedDestination;
                 }
             }
@@ -110,7 +110,7 @@ public class Worker extends Thread{
                     counter = 0;
                     for(String n : listUp) {
                         if (Double.parseDouble(n.split(" ")[2]) > wantedDestination) {
-                            System.out.println("firsta " + next + " andra " + wantedDestination);
+
                             continue;
                         }
                         counter++;
@@ -122,7 +122,7 @@ public class Worker extends Thread{
                     if (position < wantedDestination){
                         for(String n : listUp) {
                             if (Double.parseDouble(n.split(" ")[2]) > wantedDestination) {
-                                System.out.println("firsta " + next + " andra " + wantedDestination);
+
                                 continue;
                             }
                             counter++;
@@ -132,17 +132,17 @@ public class Worker extends Thread{
 
                     }
                     else {
-                        String p = ("p " + elevatorID + " " + destination);
-                        listDown.addLast(p);
+                        String floorStop = ("p " + elevatorID + " " + destination);
+                        listDown.addLast(floorStop);
                         destination = wantedDestination;
                     }
                 }
             }
             else if (destination > wantedDestination){
                 if (up){
-                    String p = ("p " + elevatorID + " " + destination);
+                    String floorStop = ("p " + elevatorID + " " + destination);
                     if (position < wantedDestination){
-                        listUp.addFirst(p);
+                        listUp.addFirst(floorStop);
 
                         destination = wantedDestination;
                     }
@@ -163,7 +163,7 @@ public class Worker extends Thread{
                     counter = 0;
                     for(String n : listDown) {
                         if (Double.parseDouble(n.split(" ")[2]) > wantedDestination) {
-                            System.out.println("firsta " + next + " andra " + wantedDestination);
+
                             continue;
                         }
                         counter++;
@@ -183,7 +183,7 @@ public class Worker extends Thread{
 
         while (true) {
 
-            System.out.println();
+
 
             if(!busy || stop) {
                 stop = false;
@@ -227,7 +227,7 @@ public class Worker extends Thread{
                 Controller.output.println("d " + elevatorID + " -1");
 
                 destination = Double.parseDouble(arguments[2]);
-                //Controller.output.println("s " + elevatorID + " " + (int) destination);
+
 
                 if (destination < position)
                     Controller.output.println("m " + elevatorID + " -1");
@@ -240,16 +240,19 @@ public class Worker extends Thread{
                 if (destination > position)
                     Controller.output.println("m " + elevatorID + " 1");
 
-                //position = destination;
+
 
             }
             if(arguments[0].equals("f")) {
-                //double decimal = (Double.parseDouble(arguments[2])) / 10;
+
                 position = Double.parseDouble(arguments[2]);
-                System.out.println("Intervall: " + (destination-0.005) + " < X < " + (destination+0.005));
+                Controller.output.println("s "+elevatorID+ " " + Math.round(position));
+
+
                 if ((destination-0.05) < position && position < (destination+0.05)) {
                     Controller.output.println("m " + elevatorID + " 0");
                     Controller.output.println("d " + elevatorID + " 1");
+
                     sleep(1000);
                     busy = false;
                 }
